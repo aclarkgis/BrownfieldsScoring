@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brownfields Scoring Tool</title>
+</head>
+<body>
+    <h1>Brownfields Scoring Tool</h1>
+
+    <!-- Form to submit project name and answers -->
+    <form method="POST" action="/submit">
+
+        <!-- Project Name Input -->
+        <label for="project_name">Project Name:</label>
+        <input type="text" id="project_name" name="project_name" required>
+        <input type="email" name="email" placeholder="Enter your email">
+        <br><br>
+
+        {% for group in groups %}
+        <fieldset>
+            <legend>{{ group.name }}</legend>
+            <p>{{ group.description }}</p>
+
+            {% if group.allow_multiple %}
+            <!-- Checkbox group -->
+            {% for question in group.questions %}
+            <label>
+                <input type="checkbox" name="question_{{ group.name }}[]" value="{{ question.value }}">
+                {{ question.text }}
+            </label><br>
+            {% endfor %}
+
+            {% else %}
+            <!-- Radio button group -->
+            {% for question in group.questions %}
+            <label>
+                <input type="radio" name="question_{{ group.name }}" value="{{ question.value }}">
+                {{ question.text }}
+            </label><br>
+            {% endfor %}
+            {% endif %}
+
+            <!-- Handling subgroups -->
+            {% if group.subgroups %}
+            {% for subgroup in group.subgroups %}
+            <fieldset>
+                <legend>{{ subgroup.name }}</legend>
+                <p>{{ subgroup.description }}</p>
+
+                {% if subgroup.allow_multiple %}
+                <!-- Checkbox group for subgroup -->
+                {% for question in subgroup.questions %}
+                <label>
+                    <input type="checkbox" name="question_{{ subgroup.name }}[]" value="{{ question.value }}">
+                    {{ question.text }}
+                </label><br>
+                {% endfor %}
+
+                {% else %}
+                <!-- Radio button group for subgroup -->
+                {% for question in subgroup.questions %}
+                <label>
+                    <input type="radio" name="question_{{ subgroup.name }}" value="{{ question.value }}">
+                    {{ question.text }}
+                </label><br>
+                {% endfor %}
+                {% endif %}
+            </fieldset>
+            {% endfor %}
+            {% endif %}
+
+        </fieldset>
+        {% endfor %}
+
+        <br><br>
+
+        <!-- Submit Button -->
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

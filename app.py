@@ -9,7 +9,7 @@ from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, templates_folder = ".")
 
 # Sample data structure (questions and groups)
 groups = [
